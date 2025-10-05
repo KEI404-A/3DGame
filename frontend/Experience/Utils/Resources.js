@@ -21,9 +21,26 @@ export default class Resources extends EventEmitter {
 
         for (const asset of this.assets[0][this.location].assets) {
             if (asset.type === "glbModel") {
-                this.loaders.gltfLoader.load(asset.path, (file) => {
-                    this.singleAssetLoaded(asset, file);
-                });
+                console.log(`Loading GLB model: ${asset.name} from ${asset.path}`);
+                this.loaders.gltfLoader.load(
+                    asset.path, 
+                    (file) => {
+                        console.log(`Successfully loaded: ${asset.name}`);
+                        this.singleAssetLoaded(asset, file);
+                    },
+                    (progress) => {
+                        console.log(`Loading progress for ${asset.name}:`, (progress.loaded / progress.total * 100) + '%');
+                    },
+                    (error) => {
+                        console.error(`Failed to load ${asset.name}:`, error);
+                        // Still continue loading other assets
+                        this.loaded++;
+                        this.emit("loading", this.loaded, this.queue);
+                        if (this.loaded === this.queue) {
+                            this.emit("ready");
+                        }
+                    }
+                );
             } else if (asset.type === "imageTexture") {
                 this.loaders.textureLoader.load(asset.path, (file) => {
                     this.singleAssetLoaded(asset, file);

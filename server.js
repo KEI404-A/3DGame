@@ -15,6 +15,7 @@ const io = new Server(server, {
 });
 
 app.use(express.static("dist"));
+app.use(express.static("public")); // Serve public files directly
 
 const indexPath = path.join(process.cwd(), "dist", "index.html");
 

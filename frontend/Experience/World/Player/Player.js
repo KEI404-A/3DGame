@@ -1,10 +1,8 @@
 import * as THREE from "three";
 import Experience from "../../Experience.js";
 import { Capsule } from "three/examples/jsm/math/Capsule";
-
 import nipplejs from "nipplejs";
 import elements from "../../Utils/functions/elements.js";
-
 import Avatar from "./Avatar.js";
 
 export default class Player {
@@ -39,7 +37,7 @@ export default class Player {
 
         this.jumpOnce = false;
         this.player.onFloor = false;
-        this.player.gravity = 60;
+        this.player.gravity = 120; // Tingkatkan gravity untuk karakter scale 80x
 
         this.player.spawn = {
             position: new THREE.Vector3(),
@@ -50,8 +48,8 @@ export default class Player {
         this.player.raycaster = new THREE.Raycaster();
         this.player.raycaster.far = 5;
 
-        this.player.height = 1.2;
-        this.player.speedMultiplier = 0.35;
+        this.player.height = 96.0; // Sesuaikan dengan scale 80x (1.2 * 80)
+        this.player.speedMultiplier = 12.0; // Speed cepat untuk karakter raksasa 80x
         this.player.position = new THREE.Vector3();
         this.player.quaternion = new THREE.Euler();
         this.player.directionOffset = 0;
@@ -62,10 +60,12 @@ export default class Player {
         this.player.direction = new THREE.Vector3();
 
         this.player.collider = new Capsule(
-            new THREE.Vector3(),
-            new THREE.Vector3(),
-            0.35
+            new THREE.Vector3(100, 5, -100), // Initial spawn serong kanan belakang
+            new THREE.Vector3(100, 5 + this.player.height, -100),
+            28.0 // Sesuaikan radius dengan scale 80x (0.35 * 80)
         );
+
+        console.log('Initial player collider:', this.player.collider);
 
         this.otherPlayers = {};
 
@@ -74,7 +74,15 @@ export default class Player {
     }
 
     initControls() {
-        this.actions = {};
+        this.actions = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false,
+            run: false,
+            jump: false,
+            movingJoyStick: false
+        };
 
         this.coords = {
             previousX: 0,
@@ -289,10 +297,25 @@ export default class Player {
 
         if (result) {
             this.player.onFloor = result.normal.y > 0;
+            
+            // Debug collision occasionally
+            if (Math.random() < 0.01) {
+                console.log('Collision detected:', {
+                    normal: result.normal,
+                    depth: result.depth,
+                    onFloor: this.player.onFloor,
+                    position: this.player.collider.end
+                });
+            }
 
             this.player.collider.translate(
                 result.normal.multiplyScalar(result.depth)
             );
+        } else {
+            // No collision - player is falling
+            if (Math.random() < 0.005) {
+                console.log('No collision - falling at:', this.player.collider.end);
+            }
         }
     }
 
@@ -332,18 +355,24 @@ export default class Player {
     resize() {}
 
     spawnPlayerOutOfBounds() {
-        const spawnPos = new THREE.Vector3(-22.4437, 8 + 5, -15.0529);
-        this.player.velocity = this.player.spawn.velocity;
+        const spawnPos = new THREE.Vector3(100, 5, -100); // Spawn serong kanan belakang
+        console.log('Spawning player at:', spawnPos);
+        this.player.velocity.set(0, 0, 0); // Reset velocity
 
         this.player.collider.start.copy(spawnPos);
         this.player.collider.end.copy(spawnPos);
 
         this.player.collider.end.y += this.player.height;
+        console.log('Player collider end:', this.player.collider.end);
+        
+        // Test collision
+        const result = this.octree.capsuleIntersect(this.player.collider);
+        console.log('Collision test at spawn:', result);
     }
 
     updateColliderMovement() {
         const speed =
-            (this.player.onFloor ? 1.75 : 0.1) *
+            (this.player.onFloor ? 3.5 : 0.2) *
             this.player.gravity *
             this.player.speedMultiplier;
 
@@ -412,8 +441,17 @@ export default class Player {
 
         this.player.body.updateMatrixWorld();
 
-        if (this.player.body.position.y < -20) {
+        // Perluas batas area hingga -1000 untuk eksplorasi ultra luas
+        if (this.player.body.position.y < -1000) {
             this.spawnPlayerOutOfBounds();
+        }
+        
+        // Tambah batasan horizontal yang sangat luas (50,000 x 50,000 area)
+        const maxDistance = 50000;
+        if (Math.abs(this.player.body.position.x) > maxDistance || 
+            Math.abs(this.player.body.position.z) > maxDistance) {
+            console.log('Player reached world boundary at:', this.player.body.position);
+            // Tidak spawn ulang, biarkan player tetap di boundary
         }
     }
 
@@ -454,7 +492,14 @@ export default class Player {
 
     updateAvatarPosition() {
         this.avatar.avatar.position.copy(this.player.collider.end);
-        this.avatar.avatar.position.y -= 1.56;
+        this.avatar.avatar.position.y -= 5; // Sesuaikan dengan scale 80x agar tidak ngambang
+        
+        // Debug log posisi avatar
+        if (Math.random() < 0.01) { // Log occasionally to avoid spam
+            console.log('Avatar position:', this.avatar.avatar.position);
+            console.log('Avatar visible:', this.avatar.avatar.visible);
+            console.log('Avatar scale:', this.avatar.avatar.scale);
+        }
 
         this.avatar.animation.update(this.time.delta);
     }
@@ -482,7 +527,7 @@ export default class Player {
 
             this.otherPlayers[player].model.nametag.position.set(
                 this.otherPlayers[player].position.position_x,
-                this.otherPlayers[player].position.position_y + 2.1,
+                this.otherPlayers[player].position.position_y + 168.0, // Sesuaikan dengan scale 80x (2.1 * 80)
                 this.otherPlayers[player].position.position_z
             );
         }

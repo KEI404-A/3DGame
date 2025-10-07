@@ -28,9 +28,9 @@ export default class Camera {
             this.params.far
         );
 
-        // Posisi camera untuk melihat karakter raksasa 80x di spawn point
-        this.perspectiveCamera.position.set(180, 120, -20);
-        this.perspectiveCamera.lookAt(100, 2, -100);
+        // Posisi camera untuk melihat karakter raksasa 80x di spawn point yang dinaikkan
+        this.perspectiveCamera.position.set(180, 180, -20);
+        this.perspectiveCamera.lookAt(100, 80, -100);
 
         this.scene.add(this.perspectiveCamera);
     }
@@ -43,18 +43,23 @@ export default class Camera {
         this.controls.maxPolarAngle = Math.PI; // Rotasi bebas 180° vertikal
         this.controls.minDistance = 40; // Min distance untuk karakter raksasa 80x
         this.controls.maxDistance = 50000; // Bisa zoom out maksimal jauh
-        this.controls.target.set(100, 2, -100); // Fokus ke posisi spawn serong kanan belakang
+        this.controls.target.set(100, 80, -100); // Fokus ke posisi spawn serong kanan belakang yang dinaikkan
         this.controls.dampingFactor = 0.05;
-        
+
         // Enable orbit controls for camera movement
         this.controls.enabled = true;
-        
+
         // Allow rotation with left mouse button for easier control
         this.controls.mouseButtons = {
             LEFT: THREE.MOUSE.ROTATE,
             MIDDLE: THREE.MOUSE.DOLLY,
             RIGHT: THREE.MOUSE.PAN
         };
+
+        // Enable collision detection for camera
+        this.raycaster = new THREE.Raycaster();
+        this.raycaster.near = 0.1;
+        this.raycaster.far = 1000;
     }
 
     enableOrbitControls() {
@@ -70,10 +75,34 @@ export default class Camera {
         this.perspectiveCamera.updateProjectionMatrix();
     }
 
+    checkCameraCollision() {
+        if (!this.experience.world || !this.experience.world.octree) return;
+
+        const direction = new THREE.Vector3();
+        direction.subVectors(this.perspectiveCamera.position, this.controls.target).normalize();
+
+        this.raycaster.set(this.controls.target, direction);
+
+        // Get octree geometry for collision detection
+        const octree = this.experience.world.octree;
+        const distance = this.perspectiveCamera.position.distanceTo(this.controls.target);
+
+        // Check collision with octree
+        const ray = this.raycaster.ray;
+        const result = octree.rayIntersect(ray);
+
+        if (result && result.distance < distance) {
+            // Camera would go through wall, adjust position
+            const collisionPoint = ray.at(result.distance - 5, new THREE.Vector3()); // 5 units offset
+            this.perspectiveCamera.position.copy(collisionPoint);
+        }
+    }
+
     update() {
         if (!this.controls) return;
         if (this.controls.enabled === true) {
             this.controls.update();
+            this.checkCameraCollision();
         }
     }
 }

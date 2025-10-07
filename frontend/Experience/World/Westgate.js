@@ -26,7 +26,7 @@ export default class Westgate {
         
         // Set proper scale and position for city block
         this.modernCityBlock.scale.set(0.8, 0.8, 0.8);
-        this.modernCityBlock.position.set(0, -5, 0);
+        this.modernCityBlock.position.set(0, 80, 0);
         // Rotasi untuk memperbaiki orientasi model
         this.modernCityBlock.rotation.x = 0;
         this.modernCityBlock.rotation.y = 0;
@@ -159,7 +159,7 @@ export default class Westgate {
         
         this.groundPlane = new THREE.Mesh(groundGeometry, groundMaterial);
         this.groundPlane.rotation.x = -Math.PI / 2; // Horizontal
-        this.groundPlane.position.y = -10; // Sedikit di bawah spawn
+        this.groundPlane.position.y = 70; // Sedikit di bawah city block yang dinaikkan tinggi
         this.groundPlane.receiveShadow = true;
         this.groundPlane.name = 'UltraWideGround';
         
@@ -181,7 +181,7 @@ export default class Westgate {
         });
         
         // Platform di berbagai ketinggian untuk eksplorasi
-        const heights = [-5, 10, 25, 50, 100];
+        const heights = [80, 100, 130, 160, 200];
         const distances = [1000, 5000, 15000, 30000, 45000];
         
         for (let i = 0; i < heights.length; i++) {

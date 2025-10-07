@@ -355,7 +355,7 @@ export default class Player {
     resize() {}
 
     spawnPlayerOutOfBounds() {
-        const spawnPos = new THREE.Vector3(100, 5, -100); // Spawn serong kanan belakang
+        const spawnPos = new THREE.Vector3(100, 90, -100); // Spawn serong kanan belakang pada ketinggian yang sesuai dengan map yang dinaikkan tinggi
         console.log('Spawning player at:', spawnPos);
         this.player.velocity.set(0, 0, 0); // Reset velocity
 

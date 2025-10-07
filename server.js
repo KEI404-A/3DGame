@@ -135,5 +135,5 @@ updateNameSpace.on("connection", (socket) => {
 });
 
 server.listen(port, () => {
-    console.log(`🚀 Server running at: http://localhost:${port}`);
+    console.log(`🚀 Istriku Evelyn at: http://localhost:${port}`);
 });

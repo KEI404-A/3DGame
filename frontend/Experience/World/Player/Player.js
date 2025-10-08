@@ -122,6 +122,8 @@ export default class Player {
                     this.resources.items[avatarSkin],
                     this.scene
                 );
+                // Setup spotlight untuk highlight karakter
+                this.setupCharacterSpotlight();
                 this.updatePlayerSocket();
             }
         });
@@ -353,6 +355,37 @@ export default class Player {
     }
 
     resize() {}
+
+    setupCharacterSpotlight() {
+        // Spotlight utama yang mengikuti karakter (highlight utama) - SANGAT TERANG
+        this.characterSpotlight = new THREE.SpotLight(0xffffff, 50.0); // Intensitas tinggi agar karakter terlihat jelas
+        this.characterSpotlight.position.set(0, 200, 0); // Di atas karakter
+        this.characterSpotlight.angle = Math.PI / 5; // Cone angle lebih lebar agar menerangi lebih banyak area
+        this.characterSpotlight.penumbra = 0.2; // Soft edge lebih tajam
+        this.characterSpotlight.decay = 1.0; // Decay lebih rendah agar cahaya lebih kuat
+        this.characterSpotlight.distance = 600; // Jarak lebih jauh
+        this.characterSpotlight.castShadow = true;
+        this.characterSpotlight.shadow.mapSize.width = 2048;
+        this.characterSpotlight.shadow.mapSize.height = 2048;
+        this.characterSpotlight.shadow.camera.near = 10;
+        this.characterSpotlight.shadow.camera.far = 600;
+        this.scene.add(this.characterSpotlight);
+        this.scene.add(this.characterSpotlight.target);
+        
+        // Point light tambahan untuk fill light (cahaya pengisi dari samping) - LEBIH TERANG
+        this.characterFillLight = new THREE.PointLight(0x6699ff, 15.0, 400); // Cahaya biru lebih terang
+        this.scene.add(this.characterFillLight);
+        
+        // Rim light untuk kontur karakter (cahaya dari belakang) - LEBIH TERANG
+        this.characterRimLight = new THREE.PointLight(0xffaa66, 10.0, 300); // Cahaya orange lebih terang untuk rim
+        this.scene.add(this.characterRimLight);
+        
+        // Tambahan: Key light dari depan untuk memastikan karakter terlihat
+        this.characterKeyLight = new THREE.PointLight(0xffffff, 20.0, 500); // Cahaya putih kuat dari depan
+        this.scene.add(this.characterKeyLight);
+        
+        console.log('Character spotlight system created - Enhanced 4-point lighting for visibility');
+    }
 
     spawnPlayerOutOfBounds() {
         const spawnPos = new THREE.Vector3(100, 90, -100); // Spawn serong kanan belakang pada ketinggian yang sesuai dengan map yang dinaikkan tinggi
@@ -795,6 +828,47 @@ export default class Player {
             this.updateAvatarAnimation();
             this.updateCameraPosition();
             this.updateOtherPlayers();
+            this.updateCharacterLights(); // Update posisi cahaya mengikuti karakter
+        }
+    }
+
+    updateCharacterLights() {
+        // Update spotlight position dan target mengikuti karakter
+        if (this.characterSpotlight && this.avatar) {
+            const avatarPos = this.avatar.avatar.position;
+            
+            // Spotlight dari atas karakter
+            this.characterSpotlight.position.set(
+                avatarPos.x,
+                avatarPos.y + 200,
+                avatarPos.z
+            );
+            this.characterSpotlight.target.position.copy(avatarPos);
+            this.characterSpotlight.target.updateMatrixWorld();
+            
+            // Fill light dari samping kanan depan
+            this.characterFillLight.position.set(
+                avatarPos.x + 80,
+                avatarPos.y + 100,
+                avatarPos.z + 80
+            );
+            
+            // Rim light dari belakang untuk outline
+            this.characterRimLight.position.set(
+                avatarPos.x,
+                avatarPos.y + 120,
+                avatarPos.z - 100
+            );
+            
+            // Key light dari depan kamera untuk memastikan karakter selalu terlihat
+            const camera = this.camera.perspectiveCamera;
+            const cameraDirection = new THREE.Vector3();
+            camera.getWorldDirection(cameraDirection);
+            this.characterKeyLight.position.set(
+                avatarPos.x + cameraDirection.x * 150,
+                avatarPos.y + 80,
+                avatarPos.z + cameraDirection.z * 150
+            );
         }
     }
 }

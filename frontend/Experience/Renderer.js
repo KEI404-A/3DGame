@@ -20,12 +20,13 @@ export default class Renderer {
             preserveDrawingBuffer: true
         });
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
-        this.renderer.toneMapping = THREE.CineonToneMapping;
-        this.renderer.toneMappingExposure = 1.5;
+        // ACESFilmic tone mapping untuk kontras yang lebih dramatis (cocok untuk dark theme)
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = 1.4; // Exposure ditingkatkan agar karakter terlihat jelas
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         this.renderer.setPixelRatio(this.sizes.pixelRatio);
         
-        // Enable shadows
+        // Enable shadows dengan soft shadows untuk atmosfer yang lebih cinematic
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         

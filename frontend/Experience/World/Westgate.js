@@ -25,8 +25,8 @@ export default class Westgate {
         }
         
         // Set proper scale and position for city block
-        this.modernCityBlock.scale.set(0.8, 0.8, 0.8);
-        this.modernCityBlock.position.set(0, 80, 0);
+        this.modernCityBlock.scale.set(10, 10, 10);
+        this.modernCityBlock.position.set(0, 0, 0);
         // Rotasi untuk memperbaiki orientasi model
         this.modernCityBlock.rotation.x = 0;
         this.modernCityBlock.rotation.y = 0;

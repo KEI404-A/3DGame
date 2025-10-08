@@ -19,28 +19,12 @@ export default class Avatar {
 
     setAvatar() {
         this.speedAdjustment = 1;
-        this.avatar.scale.set(80.0, 80.0, 80.0); // Perbesar karakter 80x - RAKSASA IDEAL!
-        this.avatar.visible = true; // Pastikan visible
-        this.avatar.position.set(0, 0, 0); // Set posisi awal
-        
-        // Debug sphere besar untuk karakter raksasa 80x
-        const debugGeometry = new THREE.SphereGeometry(64, 8, 6); // Besar sesuai scale 80x
-        const debugMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0xff0000, // Merah agar lebih terlihat
-            transparent: true, 
-            opacity: 0.9 
-        });
-        this.debugSphere = new THREE.Mesh(debugGeometry, debugMaterial);
-        this.avatar.add(this.debugSphere);
-        this.debugSphere.position.set(0, 160, 0); // Tinggi di atas avatar untuk scale 80x
-        
-        console.log('Avatar created with scale:', this.avatar.scale);
-        console.log('Avatar visible:', this.avatar.visible);
-        console.log('Avatar children count:', this.avatar.children.length);
+        this.avatar.scale.set(1.0, 1.0, 1.0);
+        this.avatar.visible = true;
+        this.avatar.position.set(0, 0, 0);
         
         this.setAnimation();
         this.scene.add(this.avatar);
-        console.log('Avatar added to scene with debug sphere');
 
         if (this.avatar.userData.id) {
             this.scene.add(this.nametag);

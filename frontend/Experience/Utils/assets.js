@@ -5,7 +5,7 @@ export default [
                 {
                     name: "modernCityBlock", 
                     type: "glbModel",
-                    path: "/models/modern_city_block.glb", // Pakai model asli
+                    path: "/models/full_gameready_city_buildings.glb", // Pakai model asli
                 },
                 {
                     name: "male",

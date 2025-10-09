@@ -29,8 +29,8 @@ export default class Camera {
         );
 
         // Posisi camera untuk melihat school map (gedung skala 50x)
-        this.perspectiveCamera.position.set(-150, 150, 150); // Posisi untuk gedung 50x
-        this.perspectiveCamera.lookAt(0, 50, 0); // Target di karakter
+        this.perspectiveCamera.position.set(-150, 200, 150); // Posisi untuk gedung 50x
+        this.perspectiveCamera.lookAt(0, 100, 0); // Target di karakter
 
         this.scene.add(this.perspectiveCamera);
     }
@@ -43,7 +43,7 @@ export default class Camera {
         this.controls.maxPolarAngle = Math.PI / 2.5; // Batasi angle vertikal lebih ketat
         this.controls.minDistance = 50; // Jarak minimum untuk model 50x
         this.controls.maxDistance = 1000; // Jarak maksimum untuk model 50x
-        this.controls.target.set(0, 50, 0); // Fokus di karakter di center school map
+        this.controls.target.set(0, 100, 0); // Fokus di karakter di center school map
         this.controls.dampingFactor = 0.05;
 
         // Enable orbit controls for camera movement

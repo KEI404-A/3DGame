@@ -60,8 +60,8 @@ export default class Player {
         this.player.direction = new THREE.Vector3();
 
         this.player.collider = new Capsule(
-            new THREE.Vector3(0, 50, 0), // Initial spawn di atas ground plane
-            new THREE.Vector3(0, 50 + this.player.height, 0),
+            new THREE.Vector3(0, 100, 0), // Initial spawn di atas floor collision plane
+            new THREE.Vector3(0, 100 + this.player.height, 0),
             28.0 // Sesuaikan radius dengan scale 80x (0.35 * 80)
         );
 
@@ -388,7 +388,7 @@ export default class Player {
     }
 
     spawnPlayerOutOfBounds() {
-        const spawnPos = new THREE.Vector3(0, 50, 0); // Spawn di atas ground plane
+        const spawnPos = new THREE.Vector3(0, 100, 0); // Spawn di atas floor collision plane
         console.log('Spawning player at:', spawnPos);
         this.player.velocity.set(0, 0, 0); // Reset velocity
 

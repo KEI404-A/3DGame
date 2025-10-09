@@ -19,7 +19,8 @@ export default class Avatar {
 
     setAvatar() {
         this.speedAdjustment = 1;
-        this.avatar.scale.set(1.0, 1.0, 1.0);
+        // Scale up avatar untuk gedung besar (skala 100x)
+        this.avatar.scale.set(80.0, 80.0, 80.0);
         this.avatar.visible = true;
         this.avatar.position.set(0, 0, 0);
         

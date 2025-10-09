@@ -9,7 +9,7 @@ export default class Camera {
         this.scene = this.experience.scene;
         this.canvas = this.experience.canvas;
         this.params = {
-            fov: 90, // FOV normal untuk menghilangkan distorsi ultrawide
+            fov: 75, // FOV yang lebih sempit untuk perspektif yang lebih dekat dan natural
             aspect: this.sizes.aspect,
             near: 0.01, // Near plane sangat dekat
             far: 100000, // Far plane ultra jauh untuk skybox luas
@@ -28,9 +28,9 @@ export default class Camera {
             this.params.far
         );
 
-        // Posisi camera untuk melihat karakter raksasa 80x di spawn point yang dinaikkan
-        this.perspectiveCamera.position.set(180, 180, -20);
-        this.perspectiveCamera.lookAt(100, 80, -100);
+        // Posisi camera untuk melihat school map (gedung skala 50x)
+        this.perspectiveCamera.position.set(-150, 150, 150); // Posisi untuk gedung 50x
+        this.perspectiveCamera.lookAt(0, 50, 0); // Target di karakter
 
         this.scene.add(this.perspectiveCamera);
     }
@@ -40,10 +40,10 @@ export default class Camera {
         this.controls.enableDamping = true;
         this.controls.enableZoom = true;
         this.controls.enablePan = true;
-        this.controls.maxPolarAngle = Math.PI; // Rotasi bebas 180° vertikal
-        this.controls.minDistance = 40; // Min distance untuk karakter raksasa 80x
-        this.controls.maxDistance = 50000; // Bisa zoom out maksimal jauh
-        this.controls.target.set(100, 80, -100); // Fokus ke posisi spawn serong kanan belakang yang dinaikkan
+        this.controls.maxPolarAngle = Math.PI / 2.5; // Batasi angle vertikal lebih ketat
+        this.controls.minDistance = 50; // Jarak minimum untuk model 50x
+        this.controls.maxDistance = 1000; // Jarak maksimum untuk model 50x
+        this.controls.target.set(0, 50, 0); // Fokus di karakter di center school map
         this.controls.dampingFactor = 0.05;
 
         // Enable orbit controls for camera movement

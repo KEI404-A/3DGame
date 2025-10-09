@@ -3,9 +3,9 @@ export default [
         westgate: {
             assets: [
                 {
-                    name: "modernCityBlock", 
+                    name: "schoolMap",
                     type: "glbModel",
-                    path: "/models/full_gameready_city_buildings.glb", // Pakai model asli
+                    path: "/models/School-CC.glb",
                 },
                 {
                     name: "male",

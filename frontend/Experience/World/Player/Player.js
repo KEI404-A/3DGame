@@ -60,8 +60,8 @@ export default class Player {
         this.player.direction = new THREE.Vector3();
 
         this.player.collider = new Capsule(
-            new THREE.Vector3(100, 5, -100), // Initial spawn serong kanan belakang
-            new THREE.Vector3(100, 5 + this.player.height, -100),
+            new THREE.Vector3(0, 50, 0), // Initial spawn di atas ground plane
+            new THREE.Vector3(0, 50 + this.player.height, 0),
             28.0 // Sesuaikan radius dengan scale 80x (0.35 * 80)
         );
 
@@ -388,7 +388,7 @@ export default class Player {
     }
 
     spawnPlayerOutOfBounds() {
-        const spawnPos = new THREE.Vector3(100, 90, -100); // Spawn serong kanan belakang pada ketinggian yang sesuai dengan map yang dinaikkan tinggi
+        const spawnPos = new THREE.Vector3(0, 50, 0); // Spawn di atas ground plane
         console.log('Spawning player at:', spawnPos);
         this.player.velocity.set(0, 0, 0); // Reset velocity
 
@@ -397,7 +397,7 @@ export default class Player {
 
         this.player.collider.end.y += this.player.height;
         console.log('Player collider end:', this.player.collider.end);
-        
+
         // Test collision
         const result = this.octree.capsuleIntersect(this.player.collider);
         console.log('Collision test at spawn:', result);
@@ -525,7 +525,7 @@ export default class Player {
 
     updateAvatarPosition() {
         this.avatar.avatar.position.copy(this.player.collider.end);
-        this.avatar.avatar.position.y -= 5; // Sesuaikan dengan scale 80x agar tidak ngambang
+        this.avatar.avatar.position.y -= 48; // Offset karakter agar kaki tepat di tanah (setengah dari height 96)
         
         // Debug log posisi avatar
         if (Math.random() < 0.01) { // Log occasionally to avoid spam

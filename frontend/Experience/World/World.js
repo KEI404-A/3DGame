@@ -38,5 +38,6 @@ export default class World extends EventEmitter {
     update() {
         if (this.player) this.player.update();
         if (this.npcManager) this.npcManager.update();
+        if (this.environment) this.environment.update();
     }
 }

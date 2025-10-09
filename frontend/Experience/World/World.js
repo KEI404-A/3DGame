@@ -8,6 +8,7 @@ import Player from "./Player/Player.js";
 import NPCManager from "./NPCManager.js";
 
 import Westgate from "./Westgate.js";
+import YourNewScene from "./YourNewScene.js"; // Import scene baru
 import Environment from "./Environment.js";
 
 export default class World extends EventEmitter {
@@ -23,14 +24,17 @@ export default class World extends EventEmitter {
 
         this.resources.on("ready", () => {
             if (this.player === null) {
-                this.westgate = new Westgate();
+                // Pilih scene yang akan dimuat
+                // this.westgate = new Westgate(); // Scene sekolah lama
+                this.yourNewScene = new YourNewScene(); // Scene baru Anda
+                
                 this.player = new Player();
                 this.environment = new Environment();
                 
                 // Initialize NPCs after world is ready
                 this.npcManager = new NPCManager();
                 this.npcManager.spawnAllNPCs();
-                console.log('World ready with NPCs');
+                console.log('World ready with NPCs dan scene baru');
             }
         });
     }

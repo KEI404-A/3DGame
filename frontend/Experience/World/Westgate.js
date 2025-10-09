@@ -28,8 +28,8 @@ export default class Westgate {
         // Scale to reasonable visible size
         console.log('!!! SETTING MAP SCALE TO 50x50x50 !!!');
         this.schoolMap.scale.set(50, 50, 50);
-        console.log('!!! SETTING MAP POSITION TO (0, 5, 0) !!!');
-        this.schoolMap.position.set(0, 5, 0); // Map tepat di atas ground plane (y=0)
+        console.log('!!! SETTING MAP POSITION TO (0, 100, 0) - FIXED HEIGHT !!!');
+        this.schoolMap.position.set(0, 100, 0); // Map at fixed height for visibility
         this.schoolMap.rotation.x = 0;
         this.schoolMap.rotation.y = 0;
         this.schoolMap.rotation.z = 0;
@@ -96,24 +96,7 @@ export default class Westgate {
         console.log('Map bounds MAX:', bbox.max);
         console.log('Map center:', center);
 
-        // Adjust position agar dasar map tepat di y=0 (ground plane)
-        const mapBottom = bbox.min.y;
-        console.log('Map bottom Y:', mapBottom);
-
-        // Jika map bottom negatif, naikkan. Jika positif, turunkan.
-        const yOffset = -mapBottom + 50; // Tambah 50 untuk spawn karakter
-        console.log('Y offset to apply:', yOffset);
-        this.schoolMap.position.y = yOffset;
-
-        // Force update matrix
-        this.schoolMap.updateMatrixWorld(true);
-
-        // Recalculate after adjustment
-        const newBbox = new THREE.Box3().setFromObject(this.schoolMap);
-        console.log('NEW Map bounds MIN:', newBbox.min);
-        console.log('NEW Map bounds MAX:', newBbox.max);
-        console.log('NEW Position:', this.schoolMap.position);
-        console.log('Map should now be visible!');
+        console.log('Map with fixed position - should be visible at y: 100');
         console.log('======================');
 
         // Add ground plane

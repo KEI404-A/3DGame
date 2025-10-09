@@ -8,6 +8,11 @@ export default [
                     path: "/models/School-CC.glb",
                 },
                 {
+                    name: "yourNewMap",
+                    type: "glbModel",
+                    path: "/models/YourNewModel.glb", // Ganti dengan nama file model Anda
+                },
+                {
                     name: "male",
                     type: "glbModel",
                     path: "/models/asian_male_animated.glb",
